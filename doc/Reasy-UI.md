@@ -740,6 +740,7 @@ $.modalDialog({
 | showStyle  | 数据显示类型 | 1:分页，2：不分页  | 1 |
 | limit | 最多显示的数据条数 | Number | 0(不限制) |
 | filterProperty | 过滤字段 | array | [] |
+| filterModifier | 过滤修饰符，参考正则表达式修饰符 | string | "g" |
 | showIndex | 显示序号 | bool | false |
 | key | 主键字段，数据的唯一标识在启用CheckBox的时候需要用到，当调用getSelected()获取选中数据时，返回的就是主键值的数组 | string | ID |
 | sortFields | 已排序字段规则优先级顺序 | array | [] |
@@ -937,6 +938,7 @@ $("#customTable").FormTable({
     dataTarget:"getQosUserList", //table的data为请求到的数据的的getQosUserList属性值
     showStyle:2, //显示全部数据不分页
     filterProperty:["hostRemark#hostName", "hostIP", "hostMAC"],//数据过滤字段
+    filterModifier: "ig", //数据过滤修饰符，参考正则表达式修饰符
     columns:[
         {   
             field:"hostRemark", 

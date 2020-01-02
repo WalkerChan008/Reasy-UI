@@ -65,6 +65,7 @@
     ],
     dataTarget: "",
     filterProperty: [],
+    filterModifier: "g",  // 筛选条件修饰符 'i|g|m'
     actionColumn: {
       columnName: _("Operation"),
       actions: [
@@ -389,7 +390,7 @@
               pData = curData[curP];
             if (pData !== "" && pData !== undefined) {
               if (typeof pData === 'string') {
-                if (pData.indexOf(this.filterValue) > -1) {
+                if (_includes(pData, this.filterValue, this.filterModifier)) {
                   this.data.push(curData);
                   break;
                 }
@@ -402,11 +403,11 @@
             } else if (curP.indexOf("#") > -1) { //对于A#B类型的筛选字段，如A有值则按A字段查找，否则按B字段查找
               let curps = curP.split("#");
               if (curData[curps[0]]) {
-                if (curData[curps[0]].indexOf(this.filterValue) > -1) {
+                if (_includes(curData[curps[0]], this.filterValue, this.filterModifier)) {
                   this.data.push(curData);
                   break;
                 }
-              } else if (curps.length > 1 && curData[curps[1]] && curData[curps[1]].indexOf(this.filterValue) > -1) {
+              } else if (curps.length > 1 && curData[curps[1]] && _includes(curData[curps[1]], this.filterValue, this.filterModifier)) {
                 this.data.push(curData);
                 break;
               }
@@ -592,7 +593,7 @@
                       });
                       //高亮筛选字符
                       if (this.autoHighLight && this.filterValue && node && this.filterProperty.indexOf(dataField) > -1) {
-                        node = node.replace(new RegExp(this.filterValue, "g"), '<span  class="bold">' + this.filterValue + '</span>');
+                        node = node.replace(new RegExp(this.filterValue, this.filterModifier), matchValue => `<span class="bold">${matchValue}</span>`);
                       }
                       $col.attr('title', dataObj[dataField]);
                       //end
@@ -648,7 +649,7 @@
                     });
                     //高亮筛选字符
                     if (this.autoHighLight && this.filterValue && node && this.filterProperty.indexOf(field) > -1) {
-                      node = node.replace(new RegExp(this.filterValue, "g"), '<span  class="bold">' + this.filterValue + '</span>');
+                      node = node.replace(new RegExp(this.filterValue, this.filterModifier), matchValue => `<span class="bold">${matchValue}</span>`);
                     }
                     //end
                   }
@@ -1240,6 +1241,20 @@
       }
     }
     return Number(ipStr);
+  }
+
+  /**
+   * str1是否包含有str2
+   * @param {String} str1 - 字符串1
+   * @param {String} str2 - 字符串2
+   * @param {String} igoreCase - 是否忽略大小写，同正则表达式的修饰符
+   * @returns {Boolean} - true包含/false不包含
+   */
+  function _includes(str1, str2, igoreCase = 'g') {
+    if(igoreCase.includes('i')) {
+      return str1.toLowerCase().includes(str2.toLowerCase());
+    }
+    return str1.includes(str2);
   }
 
 }(jQuery));
